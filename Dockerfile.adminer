@@ -1,0 +1,7 @@
+FROM adminer
+
+USER root
+
+USER adminer
+
+EXPOSE 8080

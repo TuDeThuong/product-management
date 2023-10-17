@@ -1,0 +1,35 @@
+version: '3'
+
+services:
+  dj:
+    container_name: dj
+    build: django
+    command: python manage.py runserver 0.0.0.0:80
+    volumes:
+      - ./django:/app
+    ports:
+      - "1604:80"
+    depends_on:
+      - db
+    env_file:
+      - .django.env
+  db:
+    image: postgres
+    volumes:
+      - django:/var/lib/postgresql/data
+    container_name: product-management-db
+    restart: always
+    env_file:
+      - .postgres.env
+    ports:
+      - "1605:5432"
+
+  adminer:
+    image: adminer
+    container_name: product-management-adminer
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile.adminer
+    ports:
+      - "1608:8080"
