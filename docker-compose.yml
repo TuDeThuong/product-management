@@ -3,10 +3,10 @@ version: '3'
 services:
   dj:
     container_name: dj
-    build: django
+    build: management
     command: python manage.py runserver 0.0.0.0:80
     volumes:
-      - ./django:/app
+      - ./management:/app
     ports:
       - "1604:80"
     depends_on:
@@ -15,8 +15,6 @@ services:
       - .django.env
   db:
     image: postgres
-    volumes:
-      - django:/var/lib/postgresql/data
     container_name: product-management-db
     restart: always
     env_file:
