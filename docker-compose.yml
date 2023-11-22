@@ -3,7 +3,7 @@ version: '3'
 services:
   dj:
     container_name: dj
-    build: management
+    build: .
     command: python manage.py runserver 0.0.0.0:80
     volumes:
       - ./management:/app
@@ -11,10 +11,16 @@ services:
       - "1604:80"
     depends_on:
       - db
-    env_file:
-      - .django.env
+    environment:
+      - DB_HOST=db
+      - DB_NAME=devdb
+      - DB_USER=devuser
+      - DB_PASS=changeme
+      - DEBUG=1
   db:
-    image: postgres
+    image: postgres:13-alpine
+    volumes:
+      - dev-db-data:/var/lib/postgresql/data
     container_name: product-management-db
     restart: always
     env_file:
@@ -31,3 +37,6 @@ services:
       dockerfile: Dockerfile.adminer
     ports:
       - "1608:8080"
+
+volumes:
+  dev-db-data:
