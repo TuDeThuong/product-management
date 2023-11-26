@@ -1,42 +1,37 @@
-version: '3'
+version: "3.9"
 
 services:
-  dj:
-    container_name: dj
-    build: .
-    command: python manage.py runserver 0.0.0.0:80
+  app:
+    build:
+      context: .
+      args:
+        - DEV=true
+    ports:
+      - "8000:8000"
     volumes:
       - ./management:/app
-    ports:
-      - "1604:80"
-    depends_on:
-      - db
+      - dev-static-data:/vol/web
+    command: >
+      sh -c "
+             python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:8000"
     environment:
       - DB_HOST=db
       - DB_NAME=devdb
       - DB_USER=devuser
-      - DB_PASS=changeme
-      - DEBUG=1
+      - DB_PASS=tudethuong
+    depends_on:
+      - db
+
   db:
     image: postgres:13-alpine
     volumes:
       - dev-db-data:/var/lib/postgresql/data
-    container_name: product-management-db
-    restart: always
-    env_file:
-      - .postgres.env
-    ports:
-      - "1605:5432"
-
-  adminer:
-    image: adminer
-    container_name: product-management-adminer
-    restart: always
-    build:
-      context: .
-      dockerfile: Dockerfile.adminer
-    ports:
-      - "1608:8080"
+    environment:
+      - POSTGRES_DB=devdb
+      - POSTGRES_USER=devuser
+      - POSTGRES_PASSWORD=tudethuong
 
 volumes:
   dev-db-data:
+  dev-static-data:
