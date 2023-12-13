@@ -10,6 +10,7 @@ EXPOSE 8000
 RUN pip install django
 RUN pip install djangorestframework
 RUN pip install --upgrade psycopg2-binary
+RUN pip install Pillow
 
 RUN pip install drf-spectacular
 RUN python -m venv /py && \
